@@ -25,7 +25,7 @@ export default function Login() {
         placeholder="CPF"
         value={cpf}
         onChangeText={setCpf}
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
+        style={{ borderWidth: 1, marginBottom: 10, padding: 10 }}
       />
 
       <TextInput
@@ -33,7 +33,7 @@ export default function Login() {
         secureTextEntry
         value={senha}
         onChangeText={setSenha}
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
+        style={{ borderWidth: 1, marginBottom: 10, padding: 10 }}
       />
 
       <TouchableOpacity onPress={handleLogin} style={{ backgroundColor: 'green', padding: 15 }}>
