@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 
-export default function Pagar() {
-  const [comercio, setComercio] = useState('');
+export default function Receber() {
   const [valor, setValor] = useState('');
+  const [descricao, setDescricao] = useState('');
   const router = useRouter();
 
-  const handlePagamento = () => {
-    if (!comercio || !valor) {
-      alert('Preencha todos os campos');
+  const handleGerar = () => {
+    if (!valor) {
+      alert('Digite um valor');
       return;
     }
 
@@ -20,8 +20,7 @@ export default function Pagar() {
     }
 
     // SIMULAÇÃO
-    alert(`Pagamento de ${valor} Formosinhas realizado para ${comercio} 💳`);
-    router.replace('/cliente');
+    alert(`Cobrança de ${valor} Formosinhas gerada 💰`);
   };
 
   return (
@@ -37,7 +36,7 @@ export default function Pagar() {
           marginBottom: 25,
           fontWeight: 'bold'
         }}>
-          Pagar 💳
+          Receber 💰
         </Text>
 
         {/* CARD */}
@@ -48,15 +47,7 @@ export default function Pagar() {
         }}>
 
           <TextInput
-            placeholder="Nome do comércio"
-            placeholderTextColor="#ccc"
-            value={comercio}
-            onChangeText={setComercio}
-            style={input}
-          />
-
-          <TextInput
-            placeholder="Valor"
+            placeholder="Valor a receber"
             placeholderTextColor="#ccc"
             keyboardType="numeric"
             value={valor}
@@ -64,12 +55,35 @@ export default function Pagar() {
             style={input}
           />
 
-          <TouchableOpacity style={button} onPress={handlePagamento}>
-            <Text style={btnText}>Confirmar pagamento</Text>
+          <TextInput
+            placeholder="Descrição (opcional)"
+            placeholderTextColor="#ccc"
+            value={descricao}
+            onChangeText={setDescricao}
+            style={input}
+          />
+
+          <TouchableOpacity style={button} onPress={handleGerar}>
+            <Text style={btnText}>Gerar cobrança</Text>
+          </TouchableOpacity>
+
+          {/* FUTURO QR CODE */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#FFD700',
+              padding: 15,
+              borderRadius: 12,
+              marginTop: 10
+            }}
+            onPress={() => alert('QR Code em breve 🔳')}
+          >
+            <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
+              Gerar QR Code
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.push('/cliente')}>
-            <Text style={link}>Cancelar</Text>
+            <Text style={link}>Voltar</Text>
           </TouchableOpacity>
 
         </View>
