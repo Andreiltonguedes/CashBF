@@ -4,340 +4,284 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  FlatList,
   Image,
   TouchableOpacity,
-  ScrollView,
-  Alert,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
+// ─── DADOS ─────────────────────────────
+
+const banners = [
+  { id: "1", imagem: require("../../assets/images/cash_bf.png") },
+  { id: "2", imagem: { uri: "https://picsum.photos/400/200" } },
+];
+
+const categorias = [
+  { id: "1", nome: "Bijuterias", icon: "diamond" },
+  { id: "2", nome: "Madeira", icon: "park" },
+  { id: "3", nome: "Cerâmica", icon: "emoji-objects" },
+  { id: "4", nome: "Tecidos", icon: "checkroom" },
+];
+
+const produtos = [
+  {
+    id: "1",
+    nome: "Colar artesanal",
+    preco: 25,
+    imagem: "https://picsum.photos/150",
+    artesao: "Maria",
+  },
+  {
+    id: "2",
+    nome: "Vaso de barro",
+    preco: 40,
+    imagem: "https://picsum.photos/151",
+    artesao: "João",
+  },
+];
+
+// ─── CARROSSEL ─────────────────────────
+
+function BannerCarousel() {
+  return (
+    <Carousel
+      loop
+      width={width}
+      height={180}
+      autoPlay
+      data={banners}
+      scrollAnimationDuration={1000}
+      renderItem={({ item }) => (
+        <Image source={item.imagem} style={styles.banner} />
+      )}
+    />
+  );
+}
+
+// ─── MAIN ─────────────────────────────
+
 export default function MarketplaceScreen() {
-  const [saldo, setSaldo] = useState(120);
-  const [carrinho, setCarrinho] = useState<any[]>([]);
-  const [aba, setAba] = useState("home");
-  const [indexAtual, setIndexAtual] = useState(0);
+  const [saldo] = useState(120);
+  const [carrinho, setCarrinho] = useState([]);
 
-  const banners = [
-    {
-      id: "1",
-      imagem: require("../../assets/images/cash_bf.png"),
-    },
-    {
-      id: "2",
-      imagem: { uri: "https://picsum.photos/400/200" },
-    },
-    {
-      id: "3",
-      imagem: { uri: "https://picsum.photos/401/200" },
-    },
-  ];
-
-  const categorias = [
-    { id: "1", nome: "Bijuterias", imagem: "https://picsum.photos/100" },
-    { id: "2", nome: "Madeira", imagem: "https://picsum.photos/101" },
-    { id: "3", nome: "Bordados", imagem: "https://picsum.photos/102" },
-    { id: "4", nome: "Olaria", imagem: "https://picsum.photos/103" },
-  ];
-
-  const produtos = [
-    {
-      id: "1",
-      nome: "Colar artesanal",
-      preco: 25,
-      imagem: "https://picsum.photos/150",
-      artesao: "Maria",
-    },
-    {
-      id: "2",
-      nome: "Vaso de barro",
-      preco: 40,
-      imagem: "https://picsum.photos/151",
-      artesao: "João",
-    },
-  ];
-
-  function adicionarCarrinho(produto: any) {
+  function adicionarCarrinho(produto) {
     setCarrinho([...carrinho, produto]);
-  }
-
-  function finalizarCompra() {
-    const total = carrinho.reduce((s, p) => s + p.preco, 0);
-
-    if (saldo >= total) {
-      const cashback = total * 0.1;
-      setSaldo(saldo - total + cashback);
-      setCarrinho([]);
-      Alert.alert("Compra realizada", `Cashback: R$ ${cashback.toFixed(2)}`);
-    } else {
-      Alert.alert("Saldo insuficiente");
-    }
-  }
-
-  function renderConteudo() {
-    if (aba === "mapa") {
-      return (
-        <View style={styles.center}>
-          <Text>📍 Mapa das lojas (em breve)</Text>
-        </View>
-      );
-    }
-
-    if (aba === "perfil") {
-      return (
-        <View style={styles.center}>
-          <Text>👤 Perfil do usuário</Text>
-        </View>
-      );
-    }
-
-    if (aba === "carrinho") {
-      return (
-        <View style={styles.center}>
-          <Text>🛒 Itens: {carrinho.length}</Text>
-          <Text>💰 Saldo: R$ {saldo.toFixed(2)}</Text>
-
-          <TouchableOpacity style={styles.finalizar} onPress={finalizarCompra}>
-            <Text style={{ color: "#fff" }}>Finalizar compra</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-
-    return (
-      <>
-        <TextInput placeholder="Buscar no Cash BF" style={styles.search} />
-
-        <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-
-          {/* 🔥 CARROSSEL MANUAL */}
-          <Carousel
-            loop
-            width={width}
-            height={width * 0.55}
-            data={banners}
-            pagingEnabled
-            snapEnabled
-            enabled={true}
-            scrollAnimationDuration={800}
-            onProgressChange={(_, progress) => {
-              setIndexAtual(Math.round(progress));
-            }}
-            renderItem={({ item }) => (
-              <View style={styles.bannerContainer}>
-                <Image
-                  source={item.imagem}
-                  style={styles.bannerImg}
-                  resizeMode="cover"
-                />
-              </View>
-            )}
-          />
-
-          {/* PAGINAÇÃO */}
-          <View style={styles.pagination}>
-            {banners.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.dot,
-                  index === indexAtual && styles.dotActive,
-                ]}
-              />
-            ))}
-          </View>
-
-          {/* CATEGORIAS */}
-          <Text style={styles.section}>Categorias</Text>
-          <FlatList
-            data={categorias}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.categoria}>
-                <Image source={{ uri: item.imagem }} style={styles.catImg} />
-                <Text>{item.nome}</Text>
-              </View>
-            )}
-          />
-
-          {/* PRODUTOS */}
-          <Text style={styles.section}>Produtos</Text>
-          <FlatList
-            data={produtos}
-            numColumns={2}
-            scrollEnabled={false}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.card}>
-                <Image source={{ uri: item.imagem }} style={styles.img} />
-                <Text style={styles.nome}>{item.nome}</Text>
-                <Text style={styles.artesao}>👨‍🎨 {item.artesao}</Text>
-                <Text style={styles.preco}>R$ {item.preco}</Text>
-
-                <TouchableOpacity
-                  style={styles.botao}
-                  onPress={() => adicionarCarrinho(item)}
-                >
-                  <Text style={styles.botaoTexto}>Adicionar</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-        </ScrollView>
-      </>
-    );
+    alert(produto.nome + " adicionado ao carrinho");
   }
 
   return (
     <View style={styles.container}>
-      <View style={{ flex: 1 }}>{renderConteudo()}</View>
+      {/* HEADER */}
+      <View style={styles.topBar}>
+        <View>
+          <Text style={styles.logo}>Cash BF 🌴</Text>
+          <Text style={styles.location}>Baía Formosa</Text>
+        </View>
 
-      {/* NAVBAR */}
+        <View style={styles.wallet}>
+          <MaterialIcons name="account-balance-wallet" size={16} color="#fff" />
+          <Text style={styles.walletText}> R$ {saldo.toFixed(2)}</Text>
+        </View>
+      </View>
+
+      <ScrollView>
+        {/* BUSCA */}
+        <TextInput
+          placeholder="Buscar produtos..."
+          style={styles.search}
+        />
+
+        {/* CARROSSEL */}
+        <BannerCarousel />
+
+        {/* CATEGORIAS */}
+        <Text style={styles.section}>Categorias</Text>
+
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {categorias.map((item) => (
+            <View key={item.id} style={styles.catChip}>
+              <MaterialIcons name={item.icon} size={20} color="#ff9900" />
+              <Text>{item.nome}</Text>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* OFERTAS */}
+        <Text style={styles.section}>Ofertas</Text>
+
+        <ScrollView horizontal>
+          {[1, 2, 3].map((item) => (
+            <View key={item} style={styles.dealCard}>
+              <Text style={styles.dealBadge}>-20%</Text>
+              <Text>Produto</Text>
+              <Text>R$ 20</Text>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* PRODUTOS */}
+        <Text style={styles.section}>Produtos</Text>
+
+        <View style={styles.grid}>
+          {produtos.map((item) => (
+            <View key={item.id} style={styles.card}>
+              <Image source={{ uri: item.imagem }} style={styles.img} />
+              <Text style={styles.nome}>{item.nome}</Text>
+              <Text style={styles.artesao}>por {item.artesao}</Text>
+              <Text style={styles.preco}>R$ {item.preco}</Text>
+
+              <TouchableOpacity
+                style={styles.botao}
+                onPress={() => adicionarCarrinho(item)}
+              >
+                <Text style={{ color: "#fff" }}>Adicionar</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+
+      {/* NAVBAR INFERIOR */}
       <View style={styles.navbar}>
-        <TouchableOpacity onPress={() => setAba("home")} style={styles.navItem}>
-          <MaterialIcons name="home" size={26} color={aba === "home" ? "#00c853" : "gray"} />
-          <Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => setAba("mapa")} style={styles.navItem}>
-          <MaterialIcons name="location-on" size={26} color={aba === "mapa" ? "#00c853" : "gray"} />
-          <Text style={styles.navText}>Mapa</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => setAba("carrinho")} style={styles.navItem}>
-          <MaterialIcons name="shopping-cart" size={26} color={aba === "carrinho" ? "#00c853" : "gray"} />
-          <Text style={styles.navText}>Carrinho</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => setAba("perfil")} style={styles.navItem}>
-          <MaterialIcons name="person" size={26} color={aba === "perfil" ? "#00c853" : "gray"} />
-          <Text style={styles.navText}>Perfil</Text>
-        </TouchableOpacity>
+        <MaterialIcons name="home" size={24} color="#00acc1" />
+        <MaterialIcons name="category" size={24} color="#999" />
+        <View>
+          <MaterialIcons name="shopping-cart" size={24} color="#999" />
+          {carrinho.length > 0 && (
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{carrinho.length}</Text>
+            </View>
+          )}
+        </View>
+        <MaterialIcons name="person" size={24} color="#999" />
       </View>
     </View>
   );
 }
 
+// ─── ESTILOS ─────────────────────────
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f5f5f5" },
+  container: { flex: 1, backgroundColor: "#f3f3f3" },
+
+  topBar: {
+    backgroundColor: "#131921",
+    padding: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+  },
+
+  logo: { color: "#ff9900", fontSize: 18, fontWeight: "bold" },
+  location: { color: "#ccc", fontSize: 12 },
+
+  wallet: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#232f3e",
+    padding: 8,
+    borderRadius: 20,
+  },
+
+  walletText: { color: "#fff" },
 
   search: {
     backgroundColor: "#fff",
     margin: 10,
-    padding: 12,
-    borderRadius: 12,
+    padding: 10,
+    borderRadius: 10,
   },
 
-  bannerContainer: {
-    alignItems: "center",
-    paddingHorizontal: 8,
-  },
-
-  bannerImg: {
-    width: width * 0.92,
-    height: "100%",
-    borderRadius: 20,
-  },
-
-  pagination: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 8,
-  },
-
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#ccc",
-    marginHorizontal: 4,
-  },
-
-  dotActive: {
-    backgroundColor: "#00c853",
-    width: 12,
-    height: 12,
+  banner: {
+    width: width - 20,
+    height: 180,
+    borderRadius: 15,
+    alignSelf: "center",
   },
 
   section: {
     fontSize: 16,
     fontWeight: "bold",
-    marginLeft: 10,
-    marginTop: 10,
-  },
-
-  categoria: {
-    backgroundColor: "#fff",
     margin: 10,
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
   },
 
-  catImg: { width: 60, height: 60 },
+  catChip: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    padding: 10,
+    margin: 6,
+    borderRadius: 20,
+    alignItems: "center",
+    gap: 5,
+  },
+
+  dealCard: {
+    backgroundColor: "#fff",
+    padding: 10,
+    margin: 6,
+    borderRadius: 10,
+    width: 100,
+  },
+
+  dealBadge: {
+    backgroundColor: "red",
+    color: "#fff",
+    padding: 2,
+    fontSize: 10,
+  },
+
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+  },
 
   card: {
-    flex: 1,
+    width: "45%",
     backgroundColor: "#fff",
-    margin: 8,
     padding: 10,
+    margin: 6,
     borderRadius: 12,
-    elevation: 2,
   },
 
-  img: { width: "100%", height: 100, borderRadius: 8 },
+  img: { width: "100%", height: 100, borderRadius: 10 },
 
   nome: { fontWeight: "bold" },
+  artesao: { fontSize: 12, color: "#555" },
 
-  artesao: { fontSize: 12, color: "gray" },
-
-  preco: { color: "#009688", marginBottom: 5 },
+  preco: { color: "#0f1111", marginVertical: 5 },
 
   botao: {
-    backgroundColor: "#00c853",
+    backgroundColor: "#ff9900",
     padding: 8,
     borderRadius: 8,
-  },
-
-  botaoTexto: {
-    color: "#fff",
-    textAlign: "center",
+    alignItems: "center",
   },
 
   navbar: {
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems: "center",
+    padding: 10,
     backgroundColor: "#fff",
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderColor: "#ddd",
   },
 
-  navItem: {
-    alignItems: "center",
-  },
-
-  navText: {
-    fontSize: 10,
-  },
-
-  finalizar: {
-    backgroundColor: "#009688",
-    padding: 12,
+  badge: {
+    position: "absolute",
+    right: -5,
+    top: -5,
+    backgroundColor: "#ff9900",
     borderRadius: 10,
-    marginTop: 10,
+    paddingHorizontal: 5,
   },
 
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  badgeText: {
+    fontSize: 10,
+    fontWeight: "bold",
   },
 });
