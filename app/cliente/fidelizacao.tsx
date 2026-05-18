@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import {
   View,
@@ -419,3 +420,14 @@ const styles = StyleSheet.create({
 });
 
 
+=======
+import { View, Text } from 'react-native'
+
+export default function Fidelizacao() {
+  return (
+    <View>
+      <Text>Fidelização</Text>
+    </View>
+  )
+}
+>>>>>>> e0e6d56584f7ff7bd67a6977ee569d966a0c7279

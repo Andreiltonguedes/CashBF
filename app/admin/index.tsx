@@ -24,13 +24,12 @@ export default function Admin() {
         <View style={card}>
           <Text style={label}>Usuários cadastrados</Text>
           <Text style={value}>120</Text>
-
           <Text style={label}>Empresários</Text>
           <Text style={value}>35</Text>
-
           <Text style={label}>Total em circulação</Text>
           <Text style={value}>5.000 Formosinhas 💰</Text>
         </View>
+
 
         {/* AÇÕES */}
         <View style={{ marginTop: 20 }}>
@@ -92,10 +91,10 @@ const label = {
 const value = {
   color: '#00FFAA',
   fontSize: 22,
-  fontWeight: 'bold'
+  fontWeight: '700' as const
 };
 
-function Action({ title, onPress }) {
+function Action({ title, onPress }: { title: string; onPress: () => void }) {
   return (
     <TouchableOpacity
       style={{
@@ -113,7 +112,7 @@ function Action({ title, onPress }) {
   );
 }
 
-function LogItem({ text }) {
+function LogItem({ text }: { text: string }) {
   return (
     <Text style={{ color: '#ccc', marginBottom: 5 }}>
       • {text}

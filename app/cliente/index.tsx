@@ -320,6 +320,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
 
+<<<<<<< HEAD
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -584,3 +585,40 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+=======
+function ActionButton({ title, onPress }: { title: string; onPress: () => void }) {
+  return (
+    <TouchableOpacity
+      style={{
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        padding: 15,
+        borderRadius: 12,
+        width: '30%',
+        alignItems: 'center'
+      }}
+      onPress={onPress}
+    >
+      <Text style={{ color: '#fff', fontSize: 12 }}>
+        {title}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
+function TransactionItem({ title, value }: { title: string; value: string }) {
+  return (
+    <View style={{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 8
+    }}>
+      <Text style={{ color: '#fff' }}>{title}</Text>
+      <Text style={{
+        color: value.includes('+') ? '#00FFAA' : '#ff4d4d'
+      }}>
+        {value}
+      </Text>
+    </View>
+  );
+}
+>>>>>>> e0e6d56584f7ff7bd67a6977ee569d966a0c7279
