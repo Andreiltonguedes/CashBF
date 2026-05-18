@@ -116,7 +116,7 @@ export default function Cliente() {
 
 // ================= COMPONENTES =================
 
-function ActionButton({ title, onPress }) {
+function ActionButton({ title, onPress }: { title: string; onPress: () => void }) {
   return (
     <TouchableOpacity
       style={{
@@ -135,7 +135,7 @@ function ActionButton({ title, onPress }) {
   );
 }
 
-function TransactionItem({ title, value }) {
+function TransactionItem({ title, value }: { title: string; value: string }) {
   return (
     <View style={{
       flexDirection: 'row',
